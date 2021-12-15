@@ -1,20 +1,33 @@
 import PySimpleGUI as sg
 
+from saveImage import download_images_from_url_list
+
 
 def make_window():
     sg.theme("DarkAmber")
     layout = [
-        [sg.Text("画像を取得する URL")],
-        [sg.Multiline(size=(None, 8))],
+        [sg.Text("画像取得元 URL:")],
+        [sg.Multiline(size=(None, 8), expand_x=True, expand_y=True, key="-URL_LIST-")],
+        [sg.Text("出力先フォルダ")],
         [
-            sg.Text("出力先フォルダ:"),
-            sg.Text("未選択", key="-FOLDERNAME-"),
+            sg.In(key="-FOLDER_PATH-"),
             sg.Button("選択", key="-SELECT_FOLDER-"),
         ],
-        [sg.Button("Start", key="-START-"), sg.Button("Close", key="close")],
+        [sg.Text("Basic 認証")],
+        [
+            sg.Text("User:"),
+            sg.In(size=(20,), expand_x=True, key="-BASIC_USER-"),
+        ],
+        [
+            sg.Text("Pass:"),
+            sg.In(size=(20,), expand_x=True, key="-BASIC_PASS-"),
+        ],
+        [sg.Button("Start", key="-START-")],
+        [sg.Text("結果:")],
+        [sg.Output(size=(None, 20))],
+        [sg.Button("Close", key="-CLOSE-")],
     ]
-
-    return sg.Window("画像を一括保存する太郎", layout, size=(400, 200))
+    return sg.Window("画像一括保存する太郎", layout, resizable=True, font=(None, 14))
 
 
 def main():
@@ -24,19 +37,28 @@ def main():
         event, values = window.read()
 
         if event == "-SELECT_FOLDER-":
-            folder = sg.PopupGetFolder("出力先フォルダ:", no_titlebar="true")
+            folder = sg.PopupGetFolder("出力先フォルダ:", no_titlebar="true", font=(None, 14))
             if folder is None:
                 continue
-            window["-FOLDERNAME-"].update(folder)
+            window["-FOLDER_PATH-"].update(folder)
             window.refresh()
 
         if event == "-START-":
-            print(values[0].splitlines())
+            err = ""
+            if values["-FOLDER_PATH-"] == "":
+                err += "・出力先フォルダを入力してください\n"
+            if values["-URL_LIST-"] == "":
+                err += "・画像取得元 URL を入力してください\n"
+            if err == "":
+                download_images_from_url_list(
+                    values["-URL_LIST-"].splitlines(), values["-FOLDER_PATH-"]
+                )
+            else:
+                sg.popup_error(err.rstrip("\n"), font=(None, 14))
 
-        if event == sg.WIN_CLOSED or event == "close":
-            print("close")
+        if event == sg.WIN_CLOSED or event == "-CLOSE-":
             break
-
-        print("Youentered ", folder, values)
-
     window.close()
+
+
+main()
