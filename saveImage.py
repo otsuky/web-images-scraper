@@ -39,7 +39,8 @@ def download_images_from_src_list(src_list, download_dir):
 
 def download_images_from_url_list(url_list, download_dir):
     for url in url_list:
-        print("\033[32m" + url + "\033[0m")
+        print(url)
+        # request にして try catch する
         req = urllib.request.Request(url)
         html = urllib.request.urlopen(req)
         soup = BeautifulSoup(html, "html.parser")
