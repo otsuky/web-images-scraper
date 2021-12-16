@@ -13,8 +13,10 @@ sleep_time_sec = 200 / 1000
 
 
 def create_basic_auth_header(user, password):
-    basic_user_and_pasword = base64.b64encode('{}:{}'.format(user, password).encode('utf-8'))
-    return "Basic " + basic_user_and_pasword.decode('utf-8')
+    basic_user_and_pasword = base64.b64encode(
+        "{}:{}".format(user, password).encode("utf-8")
+    )
+    return "Basic " + basic_user_and_pasword.decode("utf-8")
 
 
 def download_file_to_dir(src, dist_dir):
@@ -42,7 +44,9 @@ def download_images_from_src_list(url, src_list, download_dir):
         print(file_path)
         if validators.url(file_path):
             parsedUrl = urlparse(url)
-            download_file_to_dir(file_path, download_dir + "/" + parsedUrl.netloc + parsedUrl.path)
+            download_file_to_dir(
+                file_path, download_dir + "/" + parsedUrl.netloc + parsedUrl.path
+            )
             print("download done")
             time.sleep(sleep_time_sec)
         else:
@@ -54,7 +58,10 @@ def download_images_from_url_list(url_list, download_dir, user, password):
         print("access to ", url)
         if validators.url(url):
             if user != "" and password != "":
-                req = urllib.request.Request(url, headers={"Authorization": create_basic_auth_header(user, password)})
+                req = urllib.request.Request(
+                    url,
+                    headers={"Authorization": create_basic_auth_header(user, password)},
+                )
             else:
                 req = urllib.request.Request(url)
             html = urllib.request.urlopen(req)
