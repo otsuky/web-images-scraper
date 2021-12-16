@@ -22,10 +22,9 @@ def make_window():
             sg.Text("Pass:"),
             sg.In(size=(20,), expand_x=True, key="-BASIC_PASS-"),
         ],
-        [sg.Button("Start", key="-START-")],
         [sg.Text("結果:")],
-        [sg.Output(size=(None, 20))],
-        [sg.Button("Close", key="-CLOSE-")],
+        [sg.Output(size=(None, 20), expand_x=True)],
+        [sg.Button("Start", key="-START-"), sg.Button("Close", key="-CLOSE-")],
     ]
     return sg.Window("画像一括保存する太郎", layout, resizable=True, font=(None, 14))
 
