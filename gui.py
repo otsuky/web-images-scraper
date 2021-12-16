@@ -50,7 +50,7 @@ def main():
                 err += "・画像取得元 URL を入力してください\n"
             if err == "":
                 download_images_from_url_list(
-                    values["-URL_LIST-"].splitlines(), values["-FOLDER_PATH-"]
+                    values["-URL_LIST-"].splitlines(), values["-FOLDER_PATH-"], values["-BASIC_USER-"], values["-BASIC_PASS-"]
                 )
             else:
                 sg.popup_error(err.rstrip("\n"), font=(None, 14))
